@@ -42,28 +42,66 @@ use constant _incantation =>
 
 my @stack;
 
+sub perl_to_native
+{
+  my $count = scalar @{ $_[0] };
+  my $pointers = pack(('P' x $count)._incantation, @{ $_[0] }, 0);
+  my $array_pointer = unpack _incantation, pack 'P', $pointers;
+  push @stack, [ \$_[0], \$pointers ];
+  $array_pointer;
+}
+
+sub perl_to_native_post
+{
+  pop @stack;
+  ();
+}
+
 sub ffi_custom_type_api_1
 {
-  #my($ffi, $count) = @_;
+  my(undef, $count, $default) = @_;
   
-  return {
-  
+  my $config = {
     native_type => 'opaque',
-    
-    perl_to_native => sub {
-      my $count = scalar @{ $_[0] };
-      my $pointers = pack 'P' x $count, @{ $_[0] }, 0;
-      my $array_pointer = unpack _incantation, pack 'P', $pointers;
-      push @stack, [ \$_[0], \$pointers ];
-      $array_pointer;
-    },
-    
-    perl_to_native_post => sub {
-      pop @stack;
-      ();
-    },
-  
+    perl_to_native => \&perl_to_native,
+    perl_to_native_post => \&perl_to_native_post,
   };
+
+  if(defined $count)
+  {
+    $config->{perl_to_native} = sub {
+      my @list;
+      my $incantation = '';
+      
+      foreach my $item (@{ $_[0] })
+      {
+        if(defined $item)
+        {
+          push @list, $item;
+          $incantation .= 'P';
+        }
+        elsif(defined $default)
+        {
+          push @list, $default;
+          $incantation .= 'P';
+        }
+        else
+        {
+          push @list, 0;
+          $incantation .= _incantation;
+        }
+      }
+      
+      push @list, 0;
+      $incantation .= _incantation;
+      my $pointers = pack $incantation, @list;
+      my $array_pointer = unpack _incantation, pack 'P', $pointers;
+      push @stack, [ \@list, $pointers ];
+      $array_pointer;
+    };
+  }
+  
+  $config;
 }
 
 1;

@@ -10,7 +10,7 @@ pod_coverage:
   # format is "Class#method" or "Class", regex allowed
   # for either Class or method.
   private:
-    - FFI::Platypus::Type::StringArray#ffi_custom_type_api_1
+    - FFI::Platypus::Type::StringArray#.*
 
 unused_vars:
   skip: 0
