@@ -1,2 +1,3 @@
 /FFI-Platypus-Type-StringArray-*
 /.build
+/libtest/libtest.*
