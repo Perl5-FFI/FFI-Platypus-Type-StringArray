@@ -27,7 +27,7 @@ In your [Platypus::FFI](https://metacpan.org/pod/Platypus::FFI) code:
 # DESCRIPTION
 
 This module provides a [FFI::Platypus](https://metacpan.org/pod/FFI::Platypus) custom type for arrays of strings.
-It is not (yet) supported as a return type.
+The array is always NULL terminated.  It is not (yet) supported as a return type.
 
 # SEE ALSO
 

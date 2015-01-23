@@ -31,7 +31,7 @@ In your L<Platypus::FFI> code:
 =head1 DESCRIPTION
 
 This module provides a L<FFI::Platypus> custom type for arrays of strings.
-It is not (yet) supported as a return type.
+The array is always NULL terminated.  It is not (yet) supported as a return type.
 
 =cut
 
@@ -51,12 +51,11 @@ sub ffi_custom_type_api_1
     native_type => 'opaque',
     
     perl_to_native => sub {
-      my $argc = scalar @{ $_[0] };
-      my @c_strings = map { "$_\0" } @{ $_[0] };
-      my $ptrs = pack 'P' x $argc, @c_strings, 0;
-      my $argv = unpack _incantation, pack 'P', $ptrs;
-      push @stack, [ \@c_strings, \$ptrs ];
-      $argv;
+      my $count = scalar @{ $_[0] };
+      my $pointers = pack 'P' x $count, @{ $_[0] }, 0;
+      my $array_pointer = unpack _incantation, pack 'P', $pointers;
+      push @stack, [ \$_[0], \$pointers ];
+      $array_pointer;
     },
     
     perl_to_native_post => sub {
