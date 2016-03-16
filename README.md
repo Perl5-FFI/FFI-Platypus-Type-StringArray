@@ -44,6 +44,36 @@ arrays and the second is a default value to fill in any values that
 aren't provided when the function is called.  If not default is provided 
 then `NULL` will be passed in for those values.
 
+# SUPPORT
+
+If something does not work the way you think it should, or if you have a
+feature request, please open an issue on this project's GitHub Issue
+tracker:
+
+[https://github.com/plicease/FFI-Platypus-Type-StringArray/issues](https://github.com/plicease/FFI-Platypus-Type-StringArray/issues)
+
+# CONTRIBUTING
+
+If you have implemented a new feature or fixed a bug then you may make a
+pull request on this project's GitHub repository:
+
+[https://github.com/plicease/FFI-Platypus-Type-StringArray/pulls](https://github.com/plicease/FFI-Platypus-Type-StringArray/pulls)
+
+This project's GitHub issue tracker listed above is not Write-Only.  If
+you want to contribute then feel free to browse through the existing
+issues and see if there is something you feel you might be good at and
+take a whack at the problem.  I frequently open issues myself that I
+hope will be accomplished by someone in the future but do not have time
+to immediately implement myself.
+
+Another good area to help out in is documentation.  I try to make sure
+that there is good document coverage, that is there should be
+documentation describing all the public features and warnings about
+common pitfalls, but an outsider's or alternate view point on such
+things would be welcome; if you see something confusing or lacks
+sufficient detail I encourage documentation only pull requests to
+improve things.
+
 # SEE ALSO
 
 - [FFI::Platypus](https://metacpan.org/pod/FFI::Platypus)
@@ -51,7 +81,7 @@ then `NULL` will be passed in for those values.
 
 # AUTHOR
 
-Graham Ollis <plicease@cpan.org>
+Graham Ollis &lt;plicease@cpan.org>
 
 # COPYRIGHT AND LICENSE
 
