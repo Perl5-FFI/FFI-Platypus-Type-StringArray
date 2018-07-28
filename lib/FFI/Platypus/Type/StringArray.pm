@@ -24,13 +24,14 @@ In your C code:
 
 In your L<Platypus::FFI> code:
 
- use FFI::Platypus::Declare
-   'void',
-   [ '::StringArray' => 'string_array' ],
-   [ '::StringArray' => 'string_5' => 5 ];
+ use FFI::Platypus;
+
+ my $ffi = FFI::Platypus->new;
+ $ffi->load_custom_type('::StringArray' => 'string_array');
+ $ffi->load_custom_type('::StringArray' => 'string_5' => 5);
  
- attach takes_string_array => [string_array] => void;
- attach takes_fixed_string_array => [string_5] => void;
+ $ffi->attach(takes_string_array => ['string_array'] => 'void');
+ $ffi->attach(takes_fixed_string_array => ['string_5'] => 'void');
  
  my @list = qw( foo bar baz );
  
