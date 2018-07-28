@@ -95,7 +95,7 @@ sub ffi_custom_type_api_1
     $config->{perl_to_native} = sub {
       my @list;
       my $incantation = '';
-      
+
       foreach my $i (0..($count-1))
       {
         my $item = $_[0]->[$i];
@@ -115,7 +115,7 @@ sub ffi_custom_type_api_1
           $incantation .= _incantation;
         }
       }
-      
+
       push @list, 0;
       $incantation .= _incantation;
       my $pointers = pack $incantation, @list;
@@ -123,6 +123,14 @@ sub ffi_custom_type_api_1
       push @stack, [ \@list, $pointers ];
       $array_pointer;
     };
+
+    $config->{native_to_perl} = sub {
+      use constant _pointer_buffer => "P" . FFI::Platypus->new->sizeof('opaque');
+      return unless defined $_[0];
+      my $pointer_pointer = unpack(_incantation, unpack(_pointer_buffer, pack(_incantation, $_[0])));
+      $pointer_pointer ? [unpack('p', pack(_incantation, $pointer_pointer))] : [$default];
+    };
+
   }
   
   $config;
@@ -171,3 +179,4 @@ improve things.
 =back
 
 =cut
+

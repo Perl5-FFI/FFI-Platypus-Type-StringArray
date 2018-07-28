@@ -26,3 +26,4 @@ for(0..2)
 is get_string_from_array(\@list, 3), undef, "get_string_from_array(\@list, 3) = undef";
 
 done_testing;
+
