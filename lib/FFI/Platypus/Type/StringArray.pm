@@ -41,8 +41,9 @@ In your L<Platypus::FFI> code:
 =head1 DESCRIPTION
 
 This module provides a L<FFI::Platypus> custom type for arrays of 
-strings. The array is always NULL terminated.  It is not (yet) supported 
-as a return type.
+strings. The array is always NULL terminated.  Return types are supported
+for fixed length arrays.  It is not (yet) supported for variable length
+return types.
 
 This custom type takes two optional arguments.  The first is the size of 
 arrays and the second is a default value to fill in any values that 
@@ -124,11 +125,13 @@ sub ffi_custom_type_api_1
       $array_pointer;
     };
 
+    my $pointer_buffer = "P@{[ FFI::Platypus->new->sizeof('opaque') * $count ]}";
+    my $incantation_count = _incantation.$count;
+
     $config->{native_to_perl} = sub {
-      use constant _pointer_buffer => "P" . FFI::Platypus->new->sizeof('opaque');
       return unless defined $_[0];
-      my $pointer_pointer = unpack(_incantation, unpack(_pointer_buffer, pack(_incantation, $_[0])));
-      $pointer_pointer ? [unpack('p', pack(_incantation, $pointer_pointer))] : [$default];
+      my @pointer_pointer = unpack($incantation_count, unpack($pointer_buffer, pack(_incantation, $_[0])));
+      [map { defined $_ ? $_ : $default } map { unpack('p', pack(_incantation, $_)) } @pointer_pointer];
     };
 
   }

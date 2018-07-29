@@ -37,8 +37,9 @@ In your [Platypus::FFI](https://metacpan.org/pod/Platypus::FFI) code:
 # DESCRIPTION
 
 This module provides a [FFI::Platypus](https://metacpan.org/pod/FFI::Platypus) custom type for arrays of 
-strings. The array is always NULL terminated.  It is not (yet) supported 
-as a return type.
+strings. The array is always NULL terminated.  Return types are supported
+for fixed length arrays.  It is not (yet) supported for variable length
+return types.
 
 This custom type takes two optional arguments.  The first is the size of 
 arrays and the second is a default value to fill in any values that 

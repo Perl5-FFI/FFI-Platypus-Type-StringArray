@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Add support for fixed length arrays as a return type.
 
 0.01      2015-01-23 16:50:47 -0500
   - initial version

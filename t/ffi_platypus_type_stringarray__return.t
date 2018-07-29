@@ -12,6 +12,7 @@ my $ffi = FFI::Platypus->new;
 $ffi->lib($libtest);
 
 $ffi->load_custom_type('::StringArray' => 'sa3' =>  3);
+$ffi->load_custom_type('::StringArray' => 'sa3x' =>  3, 'x');
 
 subtest 'fixed length' => sub {
 
@@ -24,6 +25,19 @@ subtest 'fixed length' => sub {
   is_deeply(
     $ffi->function(onetwothree3 => [] => 'sa3')->call,
     [ qw( one two three ) ],
+    'returns with just strings',
+  );
+
+  is_deeply(
+    $ffi->function(onenullthree3 => [] => 'sa3')->call,
+    [ 'one', undef, 'three' ],
+    'returns with NULL/undef in the middle',
+  );
+
+  is_deeply(
+    $ffi->function(onenullthree3 => [] => 'sa3x')->call,
+    [ 'one', 'x', 'three' ],
+    'returns with NULL/undef in the middle',
   );
 
 };
