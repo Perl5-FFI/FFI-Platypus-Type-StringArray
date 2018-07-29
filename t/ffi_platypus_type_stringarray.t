@@ -41,4 +41,51 @@ subtest 'fixed length input' => sub {
 
 };
 
+subtest 'variable length input' => sub {
+
+  $ffi->load_custom_type('::StringArray' => 'sa');
+
+  my $get_string_from_array = $ffi->function(get_string_from_array => ['sa','int'] => 'string');
+
+  my @list = qw( foo bar baz );
+
+  for(0..2)
+  {
+    is $get_string_from_array->(\@list, $_), $list[$_], "get_string_from_array(\@list, $_) = $list[$_]";
+  }
+
+  is $get_string_from_array->(\@list, 3), undef, "get_string_from_array(\@list, 3) = undef";
+};
+
+subtest 'fixed length return' => sub {
+
+  $ffi->load_custom_type('::StringArray' => 'sa3' =>  3);
+  $ffi->load_custom_type('::StringArray' => 'sa3x' =>  3, 'x');
+
+  is(
+    $ffi->function(null => [] => 'sa3')->call,
+    undef,
+    'returns null',
+  );
+
+  is_deeply(
+    $ffi->function(onetwothree3 => [] => 'sa3')->call,
+    [ qw( one two three ) ],
+    'returns with just strings',
+  );
+
+  is_deeply(
+    $ffi->function(onenullthree3 => [] => 'sa3')->call,
+    [ 'one', undef, 'three' ],
+    'returns with NULL/undef in the middle',
+  );
+
+  is_deeply(
+    $ffi->function(onenullthree3 => [] => 'sa3x')->call,
+    [ 'one', 'x', 'three' ],
+    'returns with NULL/undef in the middle with default',
+  );
+
+};
+
 done_testing;
