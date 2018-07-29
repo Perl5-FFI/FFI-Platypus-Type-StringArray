@@ -4,26 +4,28 @@ use Test::More;
 use FFI::CheckLib;
 use FFI::Platypus;
 
-my $ffi = FFI::Platypus->new;
-$ffi->load_custom_type('::StringArray' => 'string_array');
-
 my $libtest = find_lib lib => 'test', libpath => 'libtest';
-
 plan skip_all => 'test requires a compiler'
   unless $libtest;
 
+my $ffi = FFI::Platypus->new;
 $ffi->lib($libtest);
 
-$ffi->attach(get_string_from_array => ['string_array','int'] => 'string');
+subtest 'variable length input' => sub {
 
-my @list = qw( foo bar baz );
+  $ffi->load_custom_type('::StringArray' => 'sa');
 
-for(0..2)
-{
-  is get_string_from_array(\@list, $_), $list[$_], "get_string_from_array(\@list, $_) = $list[$_]";
-}
+  my $get_string_from_array = $ffi->function(get_string_from_array => ['sa','int'] => 'string');
 
-is get_string_from_array(\@list, 3), undef, "get_string_from_array(\@list, 3) = undef";
+  my @list = qw( foo bar baz );
+
+  for(0..2)
+  {
+    is $get_string_from_array->(\@list, $_), $list[$_], "get_string_from_array(\@list, $_) = $list[$_]";
+  }
+
+  is $get_string_from_array->(\@list, 3), undef, "get_string_from_array(\@list, 3) = undef";
+};
 
 done_testing;
 

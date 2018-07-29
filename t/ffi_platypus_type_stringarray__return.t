@@ -11,10 +11,10 @@ plan skip_all => 'test requires a compiler'
 my $ffi = FFI::Platypus->new;
 $ffi->lib($libtest);
 
-$ffi->load_custom_type('::StringArray' => 'sa3' =>  3);
-$ffi->load_custom_type('::StringArray' => 'sa3x' =>  3, 'x');
+subtest 'fixed length return' => sub {
 
-subtest 'fixed length' => sub {
+  $ffi->load_custom_type('::StringArray' => 'sa3' =>  3);
+  $ffi->load_custom_type('::StringArray' => 'sa3x' =>  3, 'x');
 
   is(
     $ffi->function(null => [] => 'sa3')->call,
