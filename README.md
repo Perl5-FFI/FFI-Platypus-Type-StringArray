@@ -1,4 +1,4 @@
-# FFI::Platypus::Type::StringArray
+# FFI::Platypus::Type::StringArray [![Build Status](https://secure.travis-ci.org/Perl5-FFI/FFI-Platypus-Type-StringArray.png)](http://travis-ci.org/Perl5-FFI/FFI-Platypus-Type-StringArray)
 
 Platypus custom type for arrays of strings
 
