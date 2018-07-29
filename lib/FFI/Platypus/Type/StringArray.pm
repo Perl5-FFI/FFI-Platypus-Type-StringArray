@@ -2,6 +2,7 @@ package FFI::Platypus::Type::StringArray;
 
 use strict;
 use warnings;
+use FFI::Platypus;
 
 # ABSTRACT: Platypus custom type for arrays of strings
 # VERSION
@@ -41,9 +42,7 @@ In your L<Platypus::FFI> code:
 =head1 DESCRIPTION
 
 This module provides a L<FFI::Platypus> custom type for arrays of
-strings. The array is always NULL terminated.  Return types are supported
-for fixed length arrays.  It is not (yet) supported for variable length
-return types.
+strings. The array is always NULL terminated.  Return types are supported!
 
 This custom type takes two optional arguments.  The first is the size of
 arrays and the second is a default value to fill in any values that
@@ -56,6 +55,8 @@ use constant _incantation =>
   $^O eq 'MSWin32' && $Config::Config{archname} =~ /MSWin32-x64/
   ? 'Q'
   : 'L!';
+use constant _size_of_pointer => FFI::Platypus->new->sizeof('opaque');
+use constant _pointer_buffer => "P" . _size_of_pointer;
 
 my @stack;
 
@@ -77,6 +78,29 @@ sub perl_to_native_post
   ();
 }
 
+sub native_to_perl
+{
+  return unless defined $_[0];
+  my @list;
+  my $i=0;
+  while(1)
+  {
+    my $pointer_pointer = unpack(
+      _incantation,
+      unpack(
+        _pointer_buffer,
+        pack(
+          _incantation, $_[0]+_size_of_pointer*$i
+        )
+      )
+    );
+    last unless $pointer_pointer;
+    push @list, unpack('p', pack(_incantation, $pointer_pointer));
+    $i++;
+  }
+  \@list;
+}
+
 sub ffi_custom_type_api_1
 {
   # arg0 = class
@@ -89,6 +113,7 @@ sub ffi_custom_type_api_1
     native_type => 'opaque',
     perl_to_native => \&perl_to_native,
     perl_to_native_post => \&perl_to_native_post,
+    native_to_perl => \&native_to_perl,
   };
 
   if(defined $count)

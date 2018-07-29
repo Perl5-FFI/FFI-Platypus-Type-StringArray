@@ -50,3 +50,12 @@ onenullthree3()
   };
   return buffer;
 }
+
+FFI_UTIL_EXPORT const char **
+ptrnull()
+{
+  static char *buffer[1] = {
+    NULL
+  };
+  return buffer;
+}

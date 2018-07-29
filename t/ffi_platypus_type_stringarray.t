@@ -88,4 +88,31 @@ subtest 'fixed length return' => sub {
 
 };
 
+subtest 'null terminated return' => sub {
+
+  #$ffi->load_custom_type('::StringArray' => 'sa');
+
+  is(
+    $ffi->function(null => [] => 'sa')->call,
+    undef,
+    'returns null',
+  );
+
+  is_deeply(
+    $ffi->function('onetwothree4', => [] => 'sa')->call,
+    [ qw( one two three ) ],
+  );
+
+  is_deeply(
+    $ffi->function('onenullthree3' => [] => 'sa')->call,
+    [ qw( one ) ],
+  );
+
+  is_deeply(
+    $ffi->function('ptrnull' => [] => 'sa')->call,
+    [],
+  );
+
+};
+
 done_testing;
