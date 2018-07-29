@@ -40,14 +40,14 @@ In your L<Platypus::FFI> code:
 
 =head1 DESCRIPTION
 
-This module provides a L<FFI::Platypus> custom type for arrays of 
+This module provides a L<FFI::Platypus> custom type for arrays of
 strings. The array is always NULL terminated.  Return types are supported
 for fixed length arrays.  It is not (yet) supported for variable length
 return types.
 
-This custom type takes two optional arguments.  The first is the size of 
-arrays and the second is a default value to fill in any values that 
-aren't provided when the function is called.  If not default is provided 
+This custom type takes two optional arguments.  The first is the size of
+arrays and the second is a default value to fill in any values that
+aren't provided when the function is called.  If not default is provided
 then C<NULL> will be passed in for those values.
 
 =cut
@@ -84,7 +84,7 @@ sub ffi_custom_type_api_1
   # arg2 = array size
   # arg3 = default value
   my(undef, undef, $count, $default) = @_;
-  
+
   my $config = {
     native_type => 'opaque',
     perl_to_native => \&perl_to_native,
@@ -93,32 +93,21 @@ sub ffi_custom_type_api_1
 
   if(defined $count)
   {
+    my $end = $count-1;
+
     $config->{perl_to_native} = sub {
-      my @list;
       my $incantation = '';
 
-      foreach my $i (0..($count-1))
-      {
-        my $item = $_[0]->[$i];
-        if(defined $item)
-        {
-          push @list, $item;
-          $incantation .= 'P';
-        }
-        elsif(defined $default)
-        {
-          push @list, $default;
-          $incantation .= 'P';
-        }
-        else
-        {
-          push @list, 0;
-          $incantation .= _incantation;
-        }
-      }
+      my @list = ((map {
+        defined $_
+          ? do { $incantation .= 'P'; $_ }
+          : defined $default
+            ? do { $incantation .= 'P'; $default }
+            : do { $incantation .= _incantation; 0 };
+      } @{ $_[0] }[0..$end]), 0);
 
-      push @list, 0;
       $incantation .= _incantation;
+
       my $pointers = pack $incantation, @list;
       my $array_pointer = unpack _incantation, pack 'P', $pointers;
       push @stack, [ \@list, $pointers ];
@@ -135,7 +124,7 @@ sub ffi_custom_type_api_1
     };
 
   }
-  
+
   $config;
 }
 

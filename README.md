@@ -36,14 +36,14 @@ In your [Platypus::FFI](https://metacpan.org/pod/Platypus::FFI) code:
 
 # DESCRIPTION
 
-This module provides a [FFI::Platypus](https://metacpan.org/pod/FFI::Platypus) custom type for arrays of 
+This module provides a [FFI::Platypus](https://metacpan.org/pod/FFI::Platypus) custom type for arrays of
 strings. The array is always NULL terminated.  Return types are supported
 for fixed length arrays.  It is not (yet) supported for variable length
 return types.
 
-This custom type takes two optional arguments.  The first is the size of 
-arrays and the second is a default value to fill in any values that 
-aren't provided when the function is called.  If not default is provided 
+This custom type takes two optional arguments.  The first is the size of
+arrays and the second is a default value to fill in any values that
+aren't provided when the function is called.  If not default is provided
 then `NULL` will be passed in for those values.
 
 # SUPPORT
