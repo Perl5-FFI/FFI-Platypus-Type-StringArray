@@ -41,6 +41,9 @@ In your L<Platypus::FFI> code:
 
 =head1 DESCRIPTION
 
+B<NOTE>: This module has been merged into C<FFI-Platypus> and this
+repository is no longer used for development.
+
 This module provides a L<FFI::Platypus> custom type for arrays of
 strings. The array is always NULL terminated.  Return types are supported!
 
